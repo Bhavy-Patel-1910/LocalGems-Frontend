@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import API from '../api/axios';   // ✅ FIXED IMPORT
+import api from '../services/api'; // ✅ FIXED
 
 const AuthContext = createContext(null);
 
@@ -36,7 +36,6 @@ const authReducer = (state, action) => {
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // 🔹 Get current user
   useEffect(() => {
     const init = async () => {
       const token = localStorage.getItem('accessToken');
@@ -46,9 +45,9 @@ export const AuthProvider = ({ children }) => {
       }
 
       try {
-        const { data } = await API.get('/auth/me');
+        const { data } = await api.get('/auth/me'); // ✅ FIXED
         dispatch({ type: 'SET_USER', payload: data.data.user });
-      } catch (err) {
+      } catch {
         localStorage.clear();
         dispatch({ type: 'LOGOUT' });
       }
@@ -57,9 +56,8 @@ export const AuthProvider = ({ children }) => {
     init();
   }, []);
 
-  // 🔹 Login
   const login = useCallback(async (email, password) => {
-    const { data } = await API.post('/auth/login', { email, password });
+    const { data } = await api.post('/auth/login', { email, password }); // ✅ FIXED
 
     const { user, accessToken, refreshToken } = data.data;
 
@@ -74,16 +72,14 @@ export const AuthProvider = ({ children }) => {
     return user;
   }, []);
 
-  // 🔹 Register
   const register = useCallback(async (formData) => {
-    const { data } = await API.post('/auth/register', formData);
+    const { data } = await api.post('/auth/register', formData); // ✅ FIXED
     return data;
   }, []);
 
-  // 🔹 Logout
   const logout = useCallback(async () => {
     try {
-      await API.post('/auth/logout');
+      await api.post('/auth/logout'); // ✅ FIXED
     } catch {}
 
     localStorage.clear();
@@ -95,15 +91,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        ...state,
-        login,
-        register,
-        logout,
-        updateUser,
-      }}
-    >
+    <AuthContext.Provider value={{ ...state, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
