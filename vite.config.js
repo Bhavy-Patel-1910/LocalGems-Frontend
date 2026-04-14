@@ -6,8 +6,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': { target: 'https://localgems-backend.onrender.com', changeOrigin: true },
-      '/socket.io': { target: 'https://localgems-backend.onrender.com', ws: true },
+      '/api': { target: 'https://localgems-backend-5.onrender.com', changeOrigin: true },
+      '/socket.io': { target: 'https://localgems-backend-5.onrender.com', ws: true },
     },
   },
 });
