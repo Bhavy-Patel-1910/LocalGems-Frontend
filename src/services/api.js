@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: 'https://localgems-backend-5.onrender.com', withCredentials: true });
+const API = axios.create({ baseURL: 'https://localgems-backend-5.onrender.com/api', withCredentials: true });
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
